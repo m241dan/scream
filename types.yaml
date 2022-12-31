@@ -1,0 +1,25 @@
+is_a: types
+schema: !!omap
+  - int:
+      cpp: int
+      py: int
+
+  - float:
+      cpp: double
+      py: float
+
+  - str:
+      cpp: "std::string"
+      py: str
+
+  - array:
+      cpp: "std::vector<{_1}>"
+      py: "list[{_1}]"
+
+  - set:
+      cpp: "std::set<{_1}>"
+      py: "set[{_1}]"
+
+  - map:
+      cpp: "std::map<{_1}, {_2}>"
+      py: "dict[{_1}, {_2}]"
