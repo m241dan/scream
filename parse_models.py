@@ -18,26 +18,29 @@ models_schema = schema.Schema({
 
 
 def parse_models(model_schemas: list[dict]) -> dict:
-    models = {}
+    models: list[tuple] = [parse_model(model) for model in model_schemas]
 
-    for model in model_schemas:
-        models_schema.validate(model)
+    return dict(models)
 
-        parameters = []
-        for parameter in model["schema"]:
-            type_matches = re.match(regex_type_pattern, parameter["type"])
 
-            parameters.append({
-                "name": parameter["name"],
-                "type": type_matches.group(1),
-                "size": int(type_matches.group(2)),
-                "test": parameter["test"] if "test" in parameter else None,
-                "len": parameter["len"] if "len" in parameter else 1,
-            })
+def parse_model(model: dict) -> tuple[str, list[dict]]:
+    models_schema.validate(model)
 
-        models[model["name"]] = parameters
+    parameters = [parse_parameter(parameter) for parameter in model["schema"]]
 
-    return models
+    return model["name"], parameters
+
+
+def parse_parameter(parameter: dict) -> dict:
+    type_matches = re.match(regex_type_pattern, parameter["type"])
+
+    return {
+        "name": parameter["name"],
+        "type": type_matches.group(1),
+        "size": int(type_matches.group(2)),
+        "test": parameter["test"] if "test" in parameter else None,
+        "len": parameter["len"] if "len" in parameter else 1,
+    }
 
 
 class TestParsingModelsFromDataThatMeetsTheGeneralSchemaForm(unittest.TestCase):
