@@ -15,6 +15,5 @@ ENV VIRTUAL_ENV=/app/schema/venv
 RUN virtualenv -p python3.11 $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
-# eventually replace with loading and running a requirements.txt
 COPY ./requirements.txt /app/schema/
 RUN pip install -r /app/schema/requirements.txt
